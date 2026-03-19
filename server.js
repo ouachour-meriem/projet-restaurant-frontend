@@ -11,6 +11,7 @@ const orderItemsRoutes = require("./routes/orderItems");
 const paymentsRoutes = require("./routes/payments");
 const usersRoutes = require("./routes/users");
 const rolesRoutes = require("./routes/roles");
+const authRoutes = require("./routes/auth");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -37,6 +38,7 @@ app.use("/order-items", orderItemsRoutes);
 app.use("/payments", paymentsRoutes);
 app.use("/users", usersRoutes);
 app.use("/roles", rolesRoutes);
+app.use("/auth", authRoutes);
 
 app.get("/health/db", async (req, res) => {
   try {

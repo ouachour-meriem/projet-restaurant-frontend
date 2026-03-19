@@ -1,5 +1,6 @@
 const User = require("../models/user");
 const Role = require("../models/role");
+const bcrypt = require("bcryptjs");
 
 const createUser = async (req, res) => {
   try {
@@ -21,7 +22,8 @@ const createUser = async (req, res) => {
       });
     }
 
-    const user = await User.create({ name, email, password, role_id });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    const user = await User.create({ name, email, password: hashedPassword, role_id });
 
     // Ne pas renvoyer le mot de passe
     return res.status(201).json({
