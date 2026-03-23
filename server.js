@@ -1,15 +1,21 @@
 require("dotenv").config();
 const express = require("express");
 const sequelize = require("./config/database");
+const Customer = require("./models/customer");
 const Order = require("./models/order");
 const Product = require("./models/product");
 const OrderItem = require("./models/orderItem");
 const Payment = require("./models/payment");
+const customersRoutes = require("./routes/customers");
+const ordersRoutes = require("./routes/orders");
 const orderItemsRoutes = require("./routes/orderItems");
 const paymentsRoutes = require("./routes/payments");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
+
+Customer.hasMany(Order, { foreignKey: "customer_id", as: "orders" });
+Order.belongsTo(Customer, { foreignKey: "customer_id", as: "customer" });
 
 Order.hasMany(OrderItem, { foreignKey: "order_id", as: "items" });
 OrderItem.belongsTo(Order, { foreignKey: "order_id", as: "order" });
@@ -27,6 +33,8 @@ app.get("/", (req, res) => {
   });
 });
 
+app.use("/customers", customersRoutes);
+app.use("/orders", ordersRoutes);
 app.use("/order-items", orderItemsRoutes);
 app.use("/payments", paymentsRoutes);
 
