@@ -2,6 +2,7 @@ require("dotenv").config();
 const express = require("express");
 const sequelize = require("./config/database");
 const Order = require("./models/order");
+const Category = require("./models/category");
 const Product = require("./models/product");
 const OrderItem = require("./models/orderItem");
 const Payment = require("./models/payment");
@@ -12,12 +13,16 @@ const paymentsRoutes = require("./routes/payments");
 const usersRoutes = require("./routes/users");
 const rolesRoutes = require("./routes/roles");
 const authRoutes = require("./routes/auth");
+const categoriesRoutes = require("./routes/categories");
+const productsRoutes = require("./routes/products");
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
 Order.hasMany(OrderItem, { foreignKey: "order_id", as: "items" });
 OrderItem.belongsTo(Order, { foreignKey: "order_id", as: "order" });
+Category.hasMany(Product, { foreignKey: "category_id", as: "products" });
+Product.belongsTo(Category, { foreignKey: "category_id", as: "category" });
 Product.hasMany(OrderItem, { foreignKey: "product_id", as: "orderItems" });
 OrderItem.belongsTo(Product, { foreignKey: "product_id", as: "product" });
 Order.hasMany(Payment, { foreignKey: "order_id", as: "payments" });
@@ -39,6 +44,8 @@ app.use("/payments", paymentsRoutes);
 app.use("/users", usersRoutes);
 app.use("/roles", rolesRoutes);
 app.use("/auth", authRoutes);
+app.use("/categories", categoriesRoutes);
+app.use("/products", productsRoutes);
 
 app.get("/health/db", async (req, res) => {
   try {
