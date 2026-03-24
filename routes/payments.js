@@ -1,4 +1,5 @@
 const express = require("express");
+const authMiddleware = require("../middleware/authMiddleware");
 const {
   createPayment,
   validateCreatePayment
@@ -6,6 +7,6 @@ const {
 
 const router = express.Router();
 
-router.post("/", validateCreatePayment, createPayment);
+router.post("/", authMiddleware, validateCreatePayment, createPayment);
 
 module.exports = router;

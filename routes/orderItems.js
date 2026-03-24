@@ -1,4 +1,5 @@
 const express = require("express");
+const authMiddleware = require("../middleware/authMiddleware");
 const {
   addItemToOrder,
   validateAddItemToOrder
@@ -6,6 +7,6 @@ const {
 
 const router = express.Router();
 
-router.post("/", validateAddItemToOrder, addItemToOrder);
+router.post("/", authMiddleware, validateAddItemToOrder, addItemToOrder);
 
 module.exports = router;
