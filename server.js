@@ -100,9 +100,14 @@ async function startServer() {
 
       return;
     } catch (error) {
+      const detail =
+        error?.message ||
+        error?.parent?.message ||
+        error?.original?.message ||
+        String(error);
       console.error(
         `Echec connexion DB (tentative ${attempt}/${maxAttempts}) :`,
-        error.message
+        detail
       );
       await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
