@@ -14,7 +14,8 @@ const validateCreateCategory = [
   body("description")
     .optional({ checkFalsy: true })
     .isString()
-    .trim()
+    .trim(),
+  body("image_url").optional({ nullable: true }).isString().trim().isLength({ max: 512 })
 ];
 
 const createCategory = async (req, res) => {
@@ -27,10 +28,11 @@ const createCategory = async (req, res) => {
       });
     }
 
-    const { name, description } = req.body;
+    const { name, description, image_url } = req.body;
     const category = await Category.create({
       name,
-      description: description || null
+      description: description || null,
+      image_url: image_url || null
     });
 
     return res.status(201).json({

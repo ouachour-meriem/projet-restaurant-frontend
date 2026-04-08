@@ -18,8 +18,8 @@ const registerValidation = [
     .trim()
     .notEmpty()
     .withMessage("name est obligatoire")
-    .isLength({ min: 2, max: 100 })
-    .withMessage("name doit contenir entre 2 et 100 caractères"),
+    .isLength({ min: 2, max: 150 })
+    .withMessage("name doit contenir entre 2 et 150 caractères"),
   body("email")
     .trim()
     .notEmpty()
@@ -35,7 +35,12 @@ const registerValidation = [
   body("role_id")
     .optional()
     .isInt({ min: 1 })
-    .withMessage("role_id doit être un entier positif")
+    .withMessage("role_id doit être un entier positif"),
+  body("avatar_url").optional({ nullable: true }).isString().isLength({ max: 512 }),
+  body("first_name").optional({ nullable: true }).isString().trim().isLength({ max: 100 }),
+  body("last_name").optional({ nullable: true }).isString().trim().isLength({ max: 100 }),
+  body("phone").optional({ nullable: true }).isString().trim(),
+  body("customer_image_url").optional({ nullable: true }).isString().isLength({ max: 512 })
 ];
 
 module.exports = { loginValidation, registerValidation };

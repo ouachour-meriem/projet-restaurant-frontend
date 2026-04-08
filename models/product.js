@@ -9,7 +9,8 @@ const Product = sequelize.define(
     description: { type: DataTypes.TEXT },
     price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
     stock: { type: DataTypes.INTEGER, allowNull: false },
-    category_id: { type: DataTypes.INTEGER, allowNull: false }
+    category_id: { type: DataTypes.INTEGER, allowNull: false },
+    image_url: { type: DataTypes.STRING(512), allowNull: true }
   },
   { tableName: "products", timestamps: false }
 );

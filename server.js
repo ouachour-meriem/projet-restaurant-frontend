@@ -1,14 +1,8 @@
 require("dotenv").config();
 const express = require("express");
+const cors = require("cors");
 const sequelize = require("./config/database");
-const Customer = require("./models/customer");
-const Order = require("./models/order");
-const Category = require("./models/category");
-const Product = require("./models/product");
-const OrderItem = require("./models/orderItem");
-const Payment = require("./models/payment");
-const Role = require("./models/role");
-const User = require("./models/user");
+require("./models/associations");
 const orderItemsRoutes = require("./routes/orderItems");
 const paymentsRoutes = require("./routes/payments");
 const usersRoutes = require("./routes/users");
@@ -22,19 +16,12 @@ const ordersRoutes = require("./routes/orders");
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-Customer.hasMany(Order, { foreignKey: "customer_id", as: "orders" });
-Order.belongsTo(Customer, { foreignKey: "customer_id", as: "customer" });
-Order.hasMany(OrderItem, { foreignKey: "order_id", as: "items" });
-OrderItem.belongsTo(Order, { foreignKey: "order_id", as: "order" });
-Category.hasMany(Product, { foreignKey: "category_id", as: "products" });
-Product.belongsTo(Category, { foreignKey: "category_id", as: "category" });
-Product.hasMany(OrderItem, { foreignKey: "product_id", as: "orderItems" });
-OrderItem.belongsTo(Product, { foreignKey: "product_id", as: "product" });
-Order.hasMany(Payment, { foreignKey: "order_id", as: "payments" });
-Payment.belongsTo(Order, { foreignKey: "order_id", as: "order" });
-Role.hasMany(User, { foreignKey: "role_id", as: "users" });
-User.belongsTo(Role, { foreignKey: "role_id", as: "role" });
-
+app.use(
+  cors({
+    origin: process.env.CORS_ORIGIN || true,
+    credentials: true
+  })
+);
 app.use(express.json());
 
 app.get("/", (req, res) => {

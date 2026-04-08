@@ -2,6 +2,8 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const User = require("../models/user");
 const Role = require("../models/role");
+const Customer = require("../models/customer");
+const { createCustomerProfileIfClient } = require("../lib/customerProfile");
 
 const register = async (req, res) => {
   try {
@@ -30,8 +32,11 @@ const register = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      role_id: roleId
+      role_id: roleId,
+      avatar_url: req.body.avatar_url || null
     });
+
+    await createCustomerProfileIfClient(user, role, req.body, name);
 
     return res.status(201).json({
       message: "Inscription réussie",
@@ -99,12 +104,18 @@ const login = async (req, res) => {
 const getMe = async (req, res) => {
   try {
     const user = await User.findByPk(req.user.id, {
-      attributes: ["id", "name", "email", "role_id"],
+      attributes: ["id", "name", "email", "role_id", "avatar_url"],
       include: [
         {
           model: Role,
           as: "role",
           attributes: ["id", "name", "description"]
+        },
+        {
+          model: Customer,
+          as: "customerProfile",
+          required: false,
+          attributes: ["id", "first_name", "last_name", "phone", "email", "image_url"]
         }
       ]
     });

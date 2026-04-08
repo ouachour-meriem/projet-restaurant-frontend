@@ -43,7 +43,8 @@ const validateCreateProduct = [
     .bail()
     .custom((value) => Number(value) > 0)
     .withMessage("category_id doit etre > 0")
-    .toInt()
+    .toInt(),
+  body("image_url").optional({ nullable: true }).isString().trim().isLength({ max: 512 })
 ];
 
 const createProduct = async (req, res) => {
@@ -56,7 +57,7 @@ const createProduct = async (req, res) => {
       });
     }
 
-    const { name, description, price, stock, category_id } = req.body;
+    const { name, description, price, stock, category_id, image_url } = req.body;
 
     const category = await Category.findByPk(category_id);
     if (!category) {
@@ -68,7 +69,8 @@ const createProduct = async (req, res) => {
       description: description || null,
       price,
       stock,
-      category_id
+      category_id,
+      image_url: image_url || null
     });
 
     return res.status(201).json({
@@ -121,7 +123,7 @@ const getProducts = async (req, res) => {
         {
           model: Category,
           as: "category",
-          attributes: ["id", "name", "description"]
+          attributes: ["id", "name", "description", "image_url"]
         }
       ]
     });
@@ -162,7 +164,7 @@ const getProductById = async (req, res) => {
         {
           model: Category,
           as: "category",
-          attributes: ["id", "name", "description"]
+          attributes: ["id", "name", "description", "image_url"]
         }
       ]
     });

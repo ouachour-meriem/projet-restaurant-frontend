@@ -2,7 +2,7 @@ const Role = require("../models/role");
 
 const createRole = async (req, res) => {
   try {
-    const { name, description } = req.body;
+    const { name, description, image_url } = req.body;
 
     const existing = await Role.findOne({ where: { name } });
     if (existing) {
@@ -11,7 +11,11 @@ const createRole = async (req, res) => {
       });
     }
 
-    const role = await Role.create({ name, description: description || null });
+    const role = await Role.create({
+      name,
+      description: description || null,
+      image_url: image_url || null
+    });
     return res.status(201).json({ message: "Rôle créé avec succès", data: role });
   } catch (error) {
     return res.status(500).json({
@@ -24,7 +28,7 @@ const createRole = async (req, res) => {
 const getRoles = async (req, res) => {
   try {
     const roles = await Role.findAll({
-      attributes: ["id", "name", "description"],
+      attributes: ["id", "name", "description", "image_url"],
       order: [["id", "ASC"]]
     });
 

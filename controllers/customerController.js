@@ -1,9 +1,20 @@
 const { Op } = require("sequelize");
 const Customer = require("../models/customer");
+const User = require("../models/user");
 
 const { body, query, param, validationResult } = require("express-validator");
 
 const validateCreateCustomer = [
+  body("user_id")
+    .exists({ checkFalsy: true })
+    .withMessage("user_id est obligatoire")
+    .bail()
+    .isInt()
+    .withMessage("user_id doit etre un entier")
+    .bail()
+    .custom((value) => Number(value) > 0)
+    .withMessage("user_id doit etre > 0")
+    .toInt(),
   body("first_name")
     .exists({ checkFalsy: true })
     .withMessage("first_name est obligatoire")
@@ -25,7 +36,8 @@ const validateCreateCustomer = [
     .optional({ checkFalsy: true })
     .isEmail()
     .withMessage("email invalide")
-    .normalizeEmail()
+    .normalizeEmail(),
+  body("image_url").optional({ nullable: true }).isString().trim().isLength({ max: 512 })
 ];
 
 const createCustomer = async (req, res) => {
@@ -38,12 +50,27 @@ const createCustomer = async (req, res) => {
       });
     }
 
-    const { first_name, last_name, phone, email } = req.body;
+    const { user_id, first_name, last_name, phone, email, image_url } = req.body;
+
+    const user = await User.findByPk(user_id);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur introuvable" });
+    }
+
+    const existingProfile = await Customer.findOne({ where: { user_id } });
+    if (existingProfile) {
+      return res.status(409).json({
+        message: "Un profil client existe deja pour cet utilisateur"
+      });
+    }
+
     const customer = await Customer.create({
+      user_id,
       first_name,
       last_name,
       phone: phone || null,
-      email: email || null
+      email: email || null,
+      image_url: image_url || null
     });
 
     return res.status(201).json({
@@ -130,7 +157,15 @@ const getCustomerById = async (req, res) => {
       });
     }
 
-    const customer = await Customer.findByPk(req.params.id);
+    const customer = await Customer.findByPk(req.params.id, {
+      include: [
+        {
+          model: User,
+          as: "user",
+          attributes: ["id", "name", "email", "role_id", "avatar_url"]
+        }
+      ]
+    });
     if (!customer) {
       return res.status(404).json({ message: "Client introuvable" });
     }

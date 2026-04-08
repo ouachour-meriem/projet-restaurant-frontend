@@ -13,7 +13,14 @@ const createRoleValidation = [
     .isString()
     .withMessage("description doit être une chaîne de caractères")
     .isLength({ max: 65535 })
-    .withMessage("description est trop longue")
+    .withMessage("description est trop longue"),
+  body("image_url")
+    .optional({ nullable: true })
+    .trim()
+    .isString()
+    .withMessage("image_url doit être une chaîne de caractères")
+    .isLength({ max: 512 })
+    .withMessage("image_url est trop longue")
 ];
 
 module.exports = { createRoleValidation };

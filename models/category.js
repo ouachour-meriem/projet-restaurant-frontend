@@ -6,7 +6,8 @@ const Category = sequelize.define(
   {
     id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true },
     name: { type: DataTypes.STRING(100), allowNull: false },
-    description: { type: DataTypes.TEXT, allowNull: true }
+    description: { type: DataTypes.TEXT, allowNull: true },
+    image_url: { type: DataTypes.STRING(512), allowNull: true }
   },
   { tableName: "categories", timestamps: false }
 );

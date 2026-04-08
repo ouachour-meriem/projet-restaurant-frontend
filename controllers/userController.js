@@ -1,6 +1,7 @@
 const User = require("../models/user");
 const Role = require("../models/role");
 const bcrypt = require("bcryptjs");
+const { createCustomerProfileIfClient } = require("../lib/customerProfile");
 
 const createUser = async (req, res) => {
   try {
@@ -17,9 +18,16 @@ const createUser = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const user = await User.create({ name, email, password: hashedPassword, role_id });
+    const user = await User.create({
+      name,
+      email,
+      password: hashedPassword,
+      role_id,
+      avatar_url: req.body.avatar_url || null
+    });
 
-    // Ne pas renvoyer le mot de passe
+    await createCustomerProfileIfClient(user, role, req.body, name);
+
     return res.status(201).json({
       message: "Utilisateur créé avec succès",
       data: { id: user.id, name: user.name, email: user.email, role_id: user.role_id }
@@ -49,7 +57,7 @@ const getUsers = async (req, res) => {
           attributes: ["id", "name", "description"]
         }
       ],
-      attributes: ["id", "name", "email", "role_id"]
+      attributes: ["id", "name", "email", "role_id", "avatar_url"]
     });
 
     return res.json({
