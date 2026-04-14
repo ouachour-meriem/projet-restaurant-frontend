@@ -1,0 +1,17 @@
+<%- include('partials/header', { title: title }) %>
+
+<main class="container py-4 flex-grow-1">
+  <div class="p-4 p-md-5 mb-4 bg-body-secondary rounded-3">
+    <h1 class="display-6">Bienvenue</h1>
+    <p class="lead mb-0">
+      Squelette du frontend : Express, vues EJS, partials (header / footer) et menus de navigation.
+      Les routes et formulaires seront ajoutés par l’équipe (connexion, CRUD, validations, droits).
+    </p>
+  </div>
+  <p class="text-muted small">
+    URL de l’API backend (variable serveur <code>app.locals.apiUrl</code>) :
+    <strong><%= apiUrl %></strong>
+  </p>
+</main>
+
+<%- include('partials/footer') %>
