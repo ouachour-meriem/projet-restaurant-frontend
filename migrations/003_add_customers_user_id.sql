@@ -1,4 +1,4 @@
--- Lien optionnel entre un compte utilisateur et une fiche client
+
 ALTER TABLE customers
   ADD COLUMN user_id INT NULL;
 
