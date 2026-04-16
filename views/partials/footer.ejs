@@ -1,7 +1,17 @@
-    <footer class="mt-auto py-3 bg-light border-top">
-      <div class="container text-center text-muted small">
-        Projet restaurant — partie 2 (Express + EJS). Groupe de 4.
+    <% if (typeof isLoggedIn !== "undefined" && isLoggedIn) { %>
+        </div>
+        <!-- /.app-page -->
       </div>
+      <!-- /.app-main -->
+    </div>
+    <!-- /.app-shell -->
+    <% } else { %>
+    </div>
+    <!-- /.app-public-main -->
+    <% } %>
+
+    <footer class="app-site-footer text-center py-3 small">
+      <div class="text-muted">Projet restaurant — partie 2 (Express + EJS). Groupe de 4.</div>
     </footer>
     <script
       src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
@@ -10,3 +20,4 @@
     ></script>
   </body>
 </html>
+

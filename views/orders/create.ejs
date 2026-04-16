@@ -1,0 +1,115 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="orders-modal-page flex-grow-1">
+  <div class="orders-modal-card">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h1 class="h4 mb-0 font-display">Créer une commande</h1>
+      <a href="/orders" class="orders-modal-close" aria-label="Fermer">&times;</a>
+    </div>
+
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger"><%= error %></div>
+    <% } %>
+    <% if (typeof loadWarning !== 'undefined' && loadWarning) { %>
+    <div class="alert alert-warning py-2"><%= loadWarning %></div>
+    <% } %>
+
+    <form method="post" action="/orders" novalidate>
+      <div class="mb-3">
+        <label class="form-label" for="customer_id">Nom du client <span class="text-danger">*</span></label>
+      <select
+        class="form-select <%= fieldErrors.customer_id ? 'is-invalid' : '' %>"
+        id="customer_id"
+        name="customer_id"
+        <%= customers && customers.length ? 'required' : 'disabled' %>
+      >
+        <% if (customers && customers.length) { %>
+        <option value="">— Choisir un client —</option>
+        <% customers.forEach(function (c) { %>
+        <option value="<%= c.id %>" <%= String(body.customer_id) === String(c.id) ? 'selected' : '' %>>
+          <%= c.first_name %> <%= c.last_name %>
+        </option>
+        <% }); %>
+        <% } else { %>
+        <option value="">Aucun client disponible</option>
+        <% } %>
+      </select>
+      <% if (!customers || !customers.length) { %>
+      <div class="form-text text-warning">Aucun client listé : créez d’abord un client.</div>
+      <% } %>
+        <% if (fieldErrors.customer_id) { %>
+        <div class="invalid-feedback d-block"><%= fieldErrors.customer_id %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="items">Articles</label>
+        <textarea
+          class="form-control"
+          id="items"
+          name="items"
+          rows="3"
+          placeholder="Ex: Truffle Risotto, Lobster Bisque..."
+        ><%= body.items || '' %></textarea>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="total_amount">Montant <span class="text-danger">*</span></label>
+        <input
+          class="form-control <%= fieldErrors.total_amount ? 'is-invalid' : '' %>"
+          id="total_amount"
+          name="total_amount"
+          type="text"
+          inputmode="decimal"
+          required
+          placeholder="0.00"
+          value="<%= body.total_amount != null ? body.total_amount : '' %>"
+        />
+        <% if (fieldErrors.total_amount) { %>
+        <div class="invalid-feedback"><%= fieldErrors.total_amount %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label" for="status">Statut <span class="text-danger">*</span></label>
+        <select
+          class="form-select <%= fieldErrors.status ? 'is-invalid' : '' %>"
+          id="status"
+          name="status"
+          required
+        >
+          <% const st = body.status || 'pending'; %>
+          <option value="pending" <%= st === 'pending' ? 'selected' : '' %>>En attente</option>
+          <option value="processing" <%= st === 'processing' ? 'selected' : '' %>>En cours</option>
+          <option value="completed" <%= st === 'completed' ? 'selected' : '' %>>Terminée</option>
+          <option value="cancelled" <%= st === 'cancelled' ? 'selected' : '' %>>Annulée</option>
+        </select>
+        <% if (fieldErrors.status) { %>
+        <div class="invalid-feedback d-block"><%= fieldErrors.status %></div>
+        <% } %>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label" for="order_date">Date de commande <span class="text-danger">*</span></label>
+        <input
+          class="form-control <%= fieldErrors.order_date ? 'is-invalid' : '' %>"
+          id="order_date"
+          name="order_date"
+          type="datetime-local"
+          required
+          value="<%= body.order_date || '' %>"
+        />
+        <% if (fieldErrors.order_date) { %>
+        <div class="invalid-feedback"><%= fieldErrors.order_date %></div>
+        <% } %>
+      </div>
+
+      <div class="d-flex gap-2">
+        <a class="btn btn-outline-secondary flex-fill" href="/orders">Annuler</a>
+        <button class="btn btn-saveur flex-fill" type="submit">Créer</button>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

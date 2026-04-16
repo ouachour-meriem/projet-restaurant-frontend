@@ -1,0 +1,4 @@
+<% const s = String(status || "").toLowerCase(); let cls = "secondary"; if (s.includes("complet") || s === "served") { cls =
+"success"; } else if (s.includes("pend") || s.includes("prepar")) { cls = "warning"; } else if (s.includes("process") ||
+s.includes("ready")) { cls = "info"; } else if (s.includes("fail") || s.includes("cancel")) { cls = "danger"; } %>
+<span class="badge rounded-pill text-bg-<%= cls %>"><%= status %></span>

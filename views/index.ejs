@@ -1,17 +1,102 @@
 <%- include('partials/header', { title: title }) %>
 
-<main class="container py-4 flex-grow-1">
-  <div class="p-4 p-md-5 mb-4 bg-body-secondary rounded-3">
-    <h1 class="display-6">Bienvenue</h1>
-    <p class="lead mb-0">
-      Squelette du frontend : Express, vues EJS, partials (header / footer) et menus de navigation.
-      Les routes et formulaires seront ajoutés par l’équipe (connexion, CRUD, validations, droits).
-    </p>
+<% if (typeof isLoggedIn !== "undefined" && isLoggedIn) { %>
+<main class="flex-grow-1">
+  <h1 class="font-display h2 mb-1">Tableau de bord</h1>
+  <p class="text-muted mb-4">Bon retour ! Voici un aperçu de l’activité du jour.</p>
+
+  <div class="row g-3 g-lg-4 mb-4">
+    <div class="col-sm-6 col-xl-3">
+      <div class="dash-stat-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-muted small">Revenu total</div>
+            <div class="fs-4 fw-semibold mt-1">—</div>
+            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i> (données équipe)</div>
+          </div>
+          <div class="icon-wrap bg-danger bg-opacity-10 text-danger"><i class="bi bi-currency-dollar"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="dash-stat-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-muted small">Clients actifs</div>
+            <div class="fs-4 fw-semibold mt-1">—</div>
+            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i></div>
+          </div>
+          <div class="icon-wrap" style="background: rgba(200, 90, 62, 0.12); color: var(--saveur-primary)">
+            <i class="bi bi-people"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="dash-stat-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-muted small">Total commandes</div>
+            <div class="fs-4 fw-semibold mt-1">—</div>
+            <div class="small text-muted mt-1">(API commandes)</div>
+          </div>
+          <div class="icon-wrap bg-info bg-opacity-10 text-info"><i class="bi bi-bag-check"></i></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6 col-xl-3">
+      <div class="dash-stat-card h-100">
+        <div class="d-flex justify-content-between align-items-start">
+          <div>
+            <div class="text-muted small">Produits</div>
+            <div class="fs-4 fw-semibold mt-1">—</div>
+            <div class="small text-muted mt-1">(équipe)</div>
+          </div>
+          <div class="icon-wrap bg-warning bg-opacity-10 text-warning"><i class="bi bi-box-seam"></i></div>
+        </div>
+      </div>
+    </div>
   </div>
-  <p class="text-muted small">
-    URL de l’API backend (variable serveur <code>app.locals.apiUrl</code>) :
-    <strong><%= apiUrl %></strong>
-  </p>
+
+  <div class="d-flex flex-wrap gap-2 mb-4">
+    <a class="btn btn-saveur" href="/customers">Clients</a>
+    <a class="btn btn-outline-secondary" href="/orders">Commandes</a>
+  </div>
+
+  <div class="card border-0 shadow-sm rounded-4">
+    <div class="card-body p-4">
+      <h2 class="h5 font-display mb-1">Activité récente</h2>
+      <p class="text-muted small mb-0">Les métriques détaillées et le tableau « Commandes récentes » seront branchés par l’équipe sur l’API.</p>
+    </div>
+  </div>
 </main>
+<% } else { %>
+<main class="container py-4 flex-grow-1" style="max-width: 1100px">
+  <div class="row align-items-center py-4 py-lg-5">
+    <div class="col-lg-7">
+      <h1 class="font-display display-5 fw-semibold mb-3">Saveur — gestion restaurant</h1>
+      <p class="lead text-muted mb-4">
+        Connectez-vous pour accéder au tableau de bord, aux <strong>clients</strong> et aux <strong>commandes</strong>.
+      </p>
+      <div class="d-flex flex-wrap gap-2 mb-3">
+        <a class="btn btn-saveur btn-lg" href="/login?redirect=/customers">Se connecter</a>
+        <span class="align-self-center text-muted small">Session requise pour le volet « app » (sidebar).</span>
+      </div>
+    </div>
+    <div class="col-lg-5 mt-4 mt-lg-0">
+      <div class="card border-0 shadow-sm rounded-4 dash-stat-card">
+        <div class="card-body p-4">
+          <h2 class="h6 text-uppercase text-muted mb-3">Configuration</h2>
+          <p class="small mb-2">
+            <span class="text-muted">API backend</span><br />
+            <code class="user-select-all"><%= apiUrl %></code>
+          </p>
+          <p class="small text-muted mb-0">Démarrez le backend puis connectez-vous.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<% } %>
 
 <%- include('partials/footer') %>
