@@ -1,0 +1,78 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1" style="max-width: 640px">
+  <h1 class="font-display h3 mb-3">Nouveau client</h1>
+
+  <% if (typeof error !== 'undefined' && error) { %>
+  <div class="alert alert-danger"><%= error %></div>
+  <% } %>
+
+  <form method="post" action="/customers" novalidate>
+    <% if (fieldErrors.user_id) { %>
+    <div class="alert alert-warning py-2"><%= fieldErrors.user_id %></div>
+    <% } %>
+
+    <div class="mb-3">
+      <label class="form-label" for="first_name">Prénom <span class="text-danger">*</span></label>
+      <input
+        class="form-control <%= fieldErrors.first_name ? 'is-invalid' : '' %>"
+        id="first_name"
+        name="first_name"
+        type="text"
+        maxlength="100"
+        required
+        value="<%= body.first_name || '' %>"
+      />
+      <% if (fieldErrors.first_name) { %>
+      <div class="invalid-feedback"><%= fieldErrors.first_name %></div>
+      <% } %>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="last_name">Nom <span class="text-danger">*</span></label>
+      <input
+        class="form-control <%= fieldErrors.last_name ? 'is-invalid' : '' %>"
+        id="last_name"
+        name="last_name"
+        type="text"
+        maxlength="100"
+        required
+        value="<%= body.last_name || '' %>"
+      />
+      <% if (fieldErrors.last_name) { %>
+      <div class="invalid-feedback"><%= fieldErrors.last_name %></div>
+      <% } %>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="phone">Téléphone</label>
+      <input class="form-control" id="phone" name="phone" type="text" value="<%= body.phone || '' %>" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="email">E-mail</label>
+      <input class="form-control" id="email" name="email" type="email" value="<%= body.email || '' %>" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="address">Adresse</label>
+      <input class="form-control" id="address" name="address" type="text" value="<%= body.address || '' %>" />
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label" for="status">Statut</label>
+      <% const st = body.status || 'active'; %>
+      <select class="form-select" id="status" name="status">
+        <option value="active" <%= st === 'active' ? 'selected' : '' %>>Actif</option>
+        <option value="inactive" <%= st === 'inactive' ? 'selected' : '' %>>Inactif</option>
+      </select>
+    </div>
+
+    <div class="d-flex gap-2">
+      <button class="btn btn-saveur" type="submit">Enregistrer</button>
+      <a class="btn btn-outline-secondary" href="/customers">Annuler</a>
+    </div>
+  </form>
+</main>
+
+<%- include('../partials/footer') %>

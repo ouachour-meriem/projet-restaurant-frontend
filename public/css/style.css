@@ -1,8 +1,354 @@
-
-body {
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+:root {
+  --saveur-primary: #c85a3e;
+  --saveur-bg: #faf7f2;
+  --saveur-sidebar: #1e1a17;
+  --saveur-sidebar-hover: #2d2723;
+  --saveur-text: #2c2420;
+  --saveur-muted: #6b5e56;
 }
 
-.navbar-brand {
+/* Typo : titres Figma (serif) + UI sans-serif */
+.font-display {
+  font-family: "Fraunces", Georgia, "Times New Roman", serif;
+}
+
+.app-body {
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--saveur-text);
+  background-color: var(--saveur-bg);
+}
+
+/* --- Layout app (connecté) --- */
+.app-shell {
+  width: 100%;
+}
+
+@media (max-width: 991.98px) {
+  .app-shell {
+    flex-direction: column;
+  }
+  .app-sidebar {
+    width: 100%;
+    min-width: 100%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: center;
+    padding-bottom: 0.5rem;
+  }
+  .sidebar-brand {
+    flex: 1 1 auto;
+    min-width: 140px;
+  }
+  .sidebar-nav {
+    flex-direction: row !important;
+    flex-wrap: wrap;
+    flex: 1 1 100%;
+    gap: 0.35rem !important;
+    padding-top: 0.5rem !important;
+  }
+  .sidebar-footer {
+    margin-left: auto;
+  }
+}
+
+.app-sidebar {
+  width: 260px;
+  min-width: 260px;
+  background: var(--saveur-sidebar);
+  color: #e8e4df;
+}
+
+.sidebar-logo {
+  font-size: 1.35rem;
   font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #fff;
+}
+
+.sidebar-sub {
+  font-size: 0.75rem;
+  opacity: 0.65;
+  margin-top: 0.15rem;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.sidebar-link {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0.65rem 0.85rem;
+  border-radius: 0.65rem;
+  color: rgba(255, 255, 255, 0.78);
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: background 0.15s ease, color 0.15s ease;
+}
+
+.sidebar-link i {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+.sidebar-link:hover:not(.sidebar-link-disabled) {
+  background: var(--saveur-sidebar-hover);
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: var(--saveur-primary);
+  color: #fff;
+}
+
+.sidebar-link-disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.sidebar-link-logout {
+  color: rgba(255, 255, 255, 0.65);
+}
+
+.sidebar-link-logout:hover {
+  color: #fff;
+}
+
+.app-main {
+  background: var(--saveur-bg);
+}
+
+.app-topbar {
+  background: #fff;
+  border-bottom: 1px solid rgba(44, 36, 32, 0.08);
+  box-shadow: 0 1px 0 rgba(255, 255, 255, 0.6);
+}
+
+.app-topbar-name {
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: var(--saveur-text);
+}
+
+.app-topbar-email {
+  font-size: 0.78rem;
+  color: var(--saveur-muted);
+}
+
+.app-avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--saveur-primary);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+.app-page {
+  padding: 1.5rem 1.75rem 2rem;
+}
+
+@media (min-width: 992px) {
+  .app-page {
+    padding: 1.75rem 2.25rem 2.5rem;
+  }
+}
+
+/* Public (non connecté) */
+.app-topbar-public {
+  background: #fff;
+  border-bottom: 1px solid rgba(44, 36, 32, 0.08);
+}
+
+.app-brand-link {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--saveur-text) !important;
+}
+
+.app-public-main {
+  padding: 1rem 1.25rem 2rem;
+}
+
+.app-site-footer {
+  background: transparent;
+  border-top: 1px solid rgba(44, 36, 32, 0.06);
+  margin-top: auto;
+}
+
+/* Cartes type dashboard */
+.dash-stat-card {
+  background: #fff;
+  border-radius: 1rem;
+  padding: 1.25rem 1.35rem;
+  border: 1px solid rgba(44, 36, 32, 0.06);
+  box-shadow: 0 4px 24px rgba(44, 36, 32, 0.06);
+}
+
+.dash-stat-card .icon-wrap {
+  width: 44px;
+  height: 44px;
+  border-radius: 0.65rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.15rem;
+}
+
+.btn-saveur {
+  background-color: var(--saveur-primary);
+  border-color: var(--saveur-primary);
+  color: #fff;
+}
+
+.btn-saveur:hover {
+  background-color: #a84a32;
+  border-color: #a84a32;
+  color: #fff;
+}
+
+.table-responsive.rounded {
+  border: 1px solid rgba(44, 36, 32, 0.06);
+}
+
+/* Customers page (target Figma-like look) */
+.customers-title {
+  font-size: clamp(2rem, 2.4vw, 2.8rem);
+  color: #231d1a;
+  line-height: 1.05;
+}
+
+.customers-subtitle {
+  color: #8b817a;
+  font-size: 1.05rem;
+}
+
+.customers-add-btn {
+  border-radius: 0.65rem;
+  padding: 0.62rem 1.05rem;
+  font-weight: 600;
+}
+
+.customers-table-wrap {
+  background: #fff;
+  border: 1px solid #efe8e2;
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(36, 29, 26, 0.06);
+  overflow: hidden;
+}
+
+.customers-empty {
+  padding: 2rem 1.5rem;
+  color: #8b817a;
+}
+
+.customers-table thead th {
+  background: #fcf8f3;
+  color: #8a8079;
+  font-size: 0.86rem;
+  font-weight: 600;
+  border-bottom: 1px solid #efe8e2;
+  padding: 0.95rem 0.95rem;
+}
+
+.customers-table tbody td {
+  border-bottom: 1px solid #f2ebe5;
+  padding: 0.9rem 0.95rem;
+}
+
+.customers-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.customer-avatar {
+  width: 34px;
+  height: 34px;
+  border-radius: 999px;
+  background: #f8e9e1;
+  color: #c2775f;
+  font-weight: 700;
+  font-size: 0.78rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.customer-name {
+  font-size: 1.02rem;
+  font-weight: 500;
+  color: #3a322e;
+}
+
+.customer-contact-line,
+.customer-location {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: #7f746d;
+  font-size: 0.93rem;
+}
+
+.customer-location {
+  white-space: nowrap;
+}
+
+.customer-contact-line i,
+.customer-location i {
+  color: #b4aaa3;
+}
+
+.customer-metric {
+  font-weight: 600;
+  color: #5a4d45;
+}
+
+/* Modal-like create order page */
+.orders-modal-page {
+  min-height: calc(100vh - 140px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+}
+
+.orders-modal-card {
+  width: 100%;
+  max-width: 560px;
+  background: #fff;
+  border: 1px solid #ede5de;
+  border-radius: 0.9rem;
+  box-shadow: 0 16px 46px rgba(26, 20, 17, 0.2);
+  padding: 1.15rem 1.25rem 1.25rem;
+}
+
+.orders-modal-card .form-label {
+  font-size: 0.92rem;
+  color: #5b4e46;
+  margin-bottom: 0.35rem;
+}
+
+.orders-modal-card .form-control,
+.orders-modal-card .form-select {
+  border-radius: 0.5rem;
+  border-color: #e9e1db;
+}
+
+.orders-modal-close {
+  text-decoration: none;
+  color: #8a8079;
+  font-size: 1.55rem;
+  line-height: 1;
+  padding: 0 0.2rem;
+}
+
+.orders-modal-close:hover {
+  color: #5b4e46;
 }
