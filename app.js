@@ -2,12 +2,13 @@ require("dotenv").config();
 const path = require("path");
 const express = require("express");
 const session = require("express-session");
-const axios = require("axios");
 
-const { getApiUrl } = require("./lib/api");
 const requireAuth = require("./middleware/requireAuth");
+const authRoutes = require("./routes/auth");
 const customersRoutes = require("./routes/customers");
 const ordersRoutes = require("./routes/orders");
+const usersRoutes = require("./routes/users");
+const rolesRoutes = require("./routes/roles");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -45,50 +46,12 @@ app.get("/", (req, res) => {
   res.render("index", { title: "Accueil", apiUrl: app.locals.apiUrl });
 });
 
-app.get("/login", (req, res) => {
-  const redirect = req.query.redirect || "/customers";
-  res.render("login", {
-    title: "Connexion",
-    error: null,
-    email: "",
-    redirect
-  });
-});
-
-app.post("/login", async (req, res) => {
-  const apiUrl = getApiUrl();
-  try {
-    const r = await axios.post(`${apiUrl}/auth/login`, {
-      email: req.body.email,
-      password: req.body.password
-    });
-    req.session.token = r.data.token;
-    req.session.user = r.data.user;
-    let red = req.body.redirect || "/customers";
-    if (typeof red !== "string" || !red.startsWith("/")) {
-      red = "/customers";
-    }
-    return res.redirect(red);
-  } catch (e) {
-    const msg =
-      e.response && e.response.data && e.response.data.message
-        ? e.response.data.message
-        : "Connexion impossible.";
-    return res.render("login", {
-      title: "Connexion",
-      error: msg,
-      email: req.body.email || "",
-      redirect: req.body.redirect || "/customers"
-    });
-  }
-});
-
-app.get("/logout", (req, res) => {
-  req.session.destroy(() => res.redirect("/login"));
-});
+app.use("/", authRoutes);
 
 app.use("/customers", requireAuth, customersRoutes);
 app.use("/orders", requireAuth, ordersRoutes);
+app.use("/users", requireAuth, usersRoutes);
+app.use("/roles", requireAuth, rolesRoutes);
 
 app.listen(PORT, () => {
   console.log(`Frontend EJS : http://localhost:${PORT}`);
