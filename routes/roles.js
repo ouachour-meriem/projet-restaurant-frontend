@@ -1,3 +1,9 @@
+/**
+ * Routes Express — gestion des rôles (frontend EJS).
+ * CRUD via l’API /roles ; création / mise à jour / suppression selon les réponses HTTP.
+ * Les erreurs 401 déclenchent une redirection vers la page de connexion.
+ */
+
 const express = require("express");
 const { apiClient, formatApiError } = require("../lib/api");
 
