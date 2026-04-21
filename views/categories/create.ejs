@@ -32,7 +32,19 @@
 
       <div class="mb-4">
         <label class="form-label fw-semibold" for="image_url">Image (URL)</label>
-        <input class="form-control" id="image_url" name="image_url" type="url" placeholder="https://…" value="<%= body.image_url || '' %>" />
+        <input
+          class="form-control"
+          id="image_url"
+          name="image_url"
+          type="text"
+          autocomplete="off"
+          placeholder="http://localhost:3000/images/categories/mon-image.png"
+          value="<%= body.image_url || '' %>"
+        />
+        <div class="form-text small text-muted">
+          Fichier dans <code>public/images/categories/</code> → URL
+          <code>http://localhost:3000/images/categories/nomfichier.png</code> (pas le chemin <code>public/...</code>).
+        </div>
       </div>
 
       <div class="d-flex gap-2">

@@ -36,10 +36,16 @@
           class="form-control"
           id="image_url"
           name="image_url"
-          type="url"
-          placeholder="https://…"
+          type="text"
+          autocomplete="off"
+          placeholder="http://localhost:3000/images/categories/pate.png"
           value="<%= body.image_url != null && body.image_url !== '' ? body.image_url : (category.image_url || '') %>"
         />
+        <div class="form-text small text-muted">
+          Ne mettez pas <code>public/images/...</code>. Utilisez l’URL du site, par ex.
+          <code>http://localhost:3000/images/categories/nomfichier.png</code> (fichier dans
+          <code>public/images/categories/</code>).
+        </div>
       </div>
 
       <div class="d-flex gap-2">
