@@ -1,3 +1,9 @@
+/**
+ * Routes Express — gestion des utilisateurs (frontend EJS).
+ * Proxy vers l’API REST /users avec le JWT stocké en session (apiClient).
+ * Liste paginée, création, édition et suppression alignées sur le backend.
+ */
+
 const express = require("express");
 const { apiClient, formatApiError } = require("../lib/api");
 

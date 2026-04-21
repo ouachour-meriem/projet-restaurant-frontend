@@ -1,3 +1,9 @@
+/**
+ * Routes Express — authentification web (sessions).
+ * POST /login appelle l’API /auth/login ; le token est gardé en session Express.
+ * GET /logout détruit la session ; validations e-mail / mot de passe avant l’appel API.
+ */
+
 const express = require("express");
 const axios = require("axios");
 const { getApiUrl } = require("../lib/api");
