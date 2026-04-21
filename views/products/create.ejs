@@ -1,0 +1,90 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1" style="max-width: 640px">
+  <div class="mb-4">
+    <a href="/products" class="text-decoration-none small text-muted"><i class="bi bi-arrow-left me-1"></i>Produits</a>
+    <h1 class="font-display customers-title mt-2 mb-1">Nouveau produit</h1>
+    <p class="customers-subtitle mb-0">Nom, catégorie, prix numérique et stock entier obligatoires</p>
+  </div>
+
+  <div class="customers-table-wrap p-4 p-md-5">
+    <% if (typeof error !== 'undefined' && error) { %>
+    <div class="alert alert-danger py-2 small"><%= error %></div>
+    <% } %>
+
+    <form method="post" action="/products" novalidate>
+      <div class="mb-3">
+        <label class="form-label fw-semibold" for="name">Nom</label>
+        <input
+          class="form-control <%= fieldErrors.name ? 'is-invalid' : '' %>"
+          id="name"
+          name="name"
+          type="text"
+          value="<%= body.name || '' %>"
+        />
+        <% if (fieldErrors.name) { %><div class="invalid-feedback"><%= fieldErrors.name %></div><% } %>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold" for="category_id">Catégorie</label>
+        <select
+          class="form-select <%= fieldErrors.category_id ? 'is-invalid' : '' %>"
+          id="category_id"
+          name="category_id"
+        >
+          <option value="">— Choisir —</option>
+          <% (categories || []).forEach(function (c) { %>
+          <option value="<%= c.id %>" <%= String(body.category_id) === String(c.id) ? 'selected' : '' %>><%= c.name %></option>
+          <% }); %>
+        </select>
+        <% if (fieldErrors.category_id) { %><div class="invalid-feedback"><%= fieldErrors.category_id %></div><% } %>
+      </div>
+
+      <div class="row g-3 mb-3">
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="price">Prix</label>
+          <input
+            class="form-control <%= fieldErrors.price ? 'is-invalid' : '' %>"
+            id="price"
+            name="price"
+            type="text"
+            inputmode="decimal"
+            placeholder="0,00"
+            value="<%= body.price != null ? body.price : '' %>"
+          />
+          <% if (fieldErrors.price) { %><div class="invalid-feedback"><%= fieldErrors.price %></div><% } %>
+        </div>
+        <div class="col-md-6">
+          <label class="form-label fw-semibold" for="stock">Stock</label>
+          <input
+            class="form-control <%= fieldErrors.stock ? 'is-invalid' : '' %>"
+            id="stock"
+            name="stock"
+            type="text"
+            inputmode="numeric"
+            placeholder="0"
+            value="<%= body.stock != null ? body.stock : '' %>"
+          />
+          <% if (fieldErrors.stock) { %><div class="invalid-feedback"><%= fieldErrors.stock %></div><% } %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label class="form-label fw-semibold" for="description">Description</label>
+        <textarea class="form-control" id="description" name="description" rows="3"><%= body.description || '' %></textarea>
+      </div>
+
+      <div class="mb-4">
+        <label class="form-label fw-semibold" for="image_url">Image (URL)</label>
+        <input class="form-control" id="image_url" name="image_url" type="url" placeholder="https://…" value="<%= body.image_url || '' %>" />
+      </div>
+
+      <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-saveur">Créer</button>
+        <a href="/products" class="btn btn-outline-secondary">Annuler</a>
+      </div>
+    </form>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

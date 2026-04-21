@@ -1,18 +1,34 @@
 <%- include('partials/header', { title: title }) %>
 
 <% if (typeof isLoggedIn !== "undefined" && isLoggedIn) { %>
+<% const dash = typeof dashboard !== "undefined" && dashboard ? dashboard : {}; %>
+<% const fmtMoney = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €" : "—"); %>
+<% const fmtInt = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString("fr-FR") : "—"); %>
+<% const relTime = (iso) => {
+  if (!iso) return "—";
+  const t = new Date(iso).getTime();
+  if (Number.isNaN(t)) return "—";
+  const diff = Date.now() - t;
+  const m = Math.floor(diff / 60000);
+  if (m < 1) return "à l’instant";
+  if (m < 60) return "il y a " + m + " min";
+  const h = Math.floor(m / 60);
+  if (h < 24) return "il y a " + h + " h";
+  const d = Math.floor(h / 24);
+  return "il y a " + d + " j";
+}; %>
 <main class="flex-grow-1">
-  <h1 class="font-display h2 mb-1">Tableau de bord</h1>
-  <p class="text-muted mb-4">Bon retour ! Voici un aperçu de l’activité du jour.</p>
+  <h1 class="font-display customers-title mb-1">Tableau de bord</h1>
+  <p class="customers-subtitle mb-4">Bon retour ! Voici un aperçu de l’activité.</p>
 
   <div class="row g-3 g-lg-4 mb-4">
     <div class="col-sm-6 col-xl-3">
       <div class="dash-stat-card h-100">
         <div class="d-flex justify-content-between align-items-start">
           <div>
-            <div class="text-muted small">Revenu total</div>
-            <div class="fs-4 fw-semibold mt-1">—</div>
-            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i> (données équipe)</div>
+            <div class="text-muted small">Revenu (commandes chargées)</div>
+            <div class="fs-4 fw-semibold mt-1"><%= fmtMoney(dash.revenue) %></div>
+            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i> agrégé</div>
           </div>
           <div class="icon-wrap bg-danger bg-opacity-10 text-danger"><i class="bi bi-currency-dollar"></i></div>
         </div>
@@ -22,9 +38,9 @@
       <div class="dash-stat-card h-100">
         <div class="d-flex justify-content-between align-items-start">
           <div>
-            <div class="text-muted small">Clients actifs</div>
-            <div class="fs-4 fw-semibold mt-1">—</div>
-            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i></div>
+            <div class="text-muted small">Clients</div>
+            <div class="fs-4 fw-semibold mt-1"><%= fmtInt(dash.customersCount) %></div>
+            <div class="small text-muted mt-1">total API</div>
           </div>
           <div class="icon-wrap" style="background: rgba(200, 90, 62, 0.12); color: var(--saveur-primary)">
             <i class="bi bi-people"></i>
@@ -36,9 +52,9 @@
       <div class="dash-stat-card h-100">
         <div class="d-flex justify-content-between align-items-start">
           <div>
-            <div class="text-muted small">Total commandes</div>
-            <div class="fs-4 fw-semibold mt-1">—</div>
-            <div class="small text-muted mt-1">(API commandes)</div>
+            <div class="text-muted small">Commandes</div>
+            <div class="fs-4 fw-semibold mt-1"><%= fmtInt(dash.ordersCount) %></div>
+            <div class="small text-muted mt-1">total API</div>
           </div>
           <div class="icon-wrap bg-info bg-opacity-10 text-info"><i class="bi bi-bag-check"></i></div>
         </div>
@@ -49,8 +65,8 @@
         <div class="d-flex justify-content-between align-items-start">
           <div>
             <div class="text-muted small">Produits</div>
-            <div class="fs-4 fw-semibold mt-1">—</div>
-            <div class="small text-muted mt-1">(équipe)</div>
+            <div class="fs-4 fw-semibold mt-1"><%= fmtInt(dash.productsCount) %></div>
+            <div class="small text-success mt-1"><i class="bi bi-arrow-up"></i> catalogue</div>
           </div>
           <div class="icon-wrap bg-warning bg-opacity-10 text-warning"><i class="bi bi-box-seam"></i></div>
         </div>
@@ -59,17 +75,51 @@
   </div>
 
   <div class="d-flex flex-wrap gap-2 mb-4">
-    <a class="btn btn-saveur" href="/customers">Clients</a>
+    <a class="btn btn-saveur" href="/products">Produits</a>
+    <a class="btn btn-outline-secondary" href="/categories">Catégories</a>
+    <a class="btn btn-outline-secondary" href="/customers">Clients</a>
+    <a class="btn btn-outline-secondary" href="/orders">Commandes</a>
     <a class="btn btn-outline-secondary" href="/users">Utilisateurs</a>
     <a class="btn btn-outline-secondary" href="/roles">Rôles</a>
-    <a class="btn btn-outline-secondary" href="/orders">Commandes</a>
   </div>
 
-  <div class="card border-0 shadow-sm rounded-4">
-    <div class="card-body p-4">
-      <h2 class="h5 font-display mb-1">Activité récente</h2>
-      <p class="text-muted small mb-0">Les métriques détaillées et le tableau « Commandes récentes » seront branchés par l’équipe sur l’API.</p>
+  <div class="mb-3">
+    <h2 class="font-display h4 mb-1">Commandes récentes</h2>
+    <p class="text-muted small mb-0">Dernières transactions (échantillon depuis l’API).</p>
+  </div>
+
+  <div class="customers-table-wrap">
+    <% if (!dash.recentOrders || dash.recentOrders.length === 0) { %>
+    <div class="customers-empty">Aucune commande à afficher pour le moment.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0 customers-table dash-recent-table">
+        <thead>
+          <tr>
+            <th>Commande</th>
+            <th>Client</th>
+            <th class="text-end">Montant</th>
+            <th>Statut</th>
+            <th class="text-end">Temps</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% dash.recentOrders.forEach(function (o) { %>
+          <% const cust = o.customer ? `${o.customer.first_name || ""} ${o.customer.last_name || ""}`.trim() : "—"; %>
+          <tr>
+            <td class="customer-metric">#<%= o.id %></td>
+            <td><span class="customer-name"><%= cust || "—" %></span></td>
+            <td class="text-end customer-metric">
+              <% if (o.total_amount != null) { %> <%= Number(o.total_amount).toFixed(2) %> € <% } else { %>—<% } %>
+            </td>
+            <td><%- include('partials/statusBadge', { status: o.status || "—" }) %></td>
+            <td class="text-end text-muted small"><%= relTime(o.order_date) %></td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
     </div>
+    <% } %>
   </div>
 </main>
 <% } else { %>
@@ -78,10 +128,11 @@
     <div class="col-lg-7">
       <h1 class="font-display display-5 fw-semibold mb-3">Saveur — gestion restaurant</h1>
       <p class="lead text-muted mb-4">
-        Connectez-vous pour accéder au tableau de bord, aux <strong>clients</strong> et aux <strong>commandes</strong>.
+        Connectez-vous pour accéder au tableau de bord, aux <strong>produits</strong>, <strong>catégories</strong>,
+        <strong>clients</strong> et aux <strong>commandes</strong>.
       </p>
       <div class="d-flex flex-wrap gap-2 mb-3">
-        <a class="btn btn-saveur btn-lg" href="/login?redirect=/customers">Se connecter</a>
+        <a class="btn btn-saveur btn-lg" href="/login?redirect=/">Se connecter</a>
         <span class="align-self-center text-muted small">Session requise pour le volet « app » (sidebar).</span>
       </div>
     </div>

@@ -1,0 +1,75 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="font-display customers-title mb-1">Catégories</h1>
+      <p class="customers-subtitle mb-0">Organisez vos produits par familles</p>
+    </div>
+    <a class="btn btn-saveur customers-add-btn" href="/categories/new">
+      <i class="bi bi-plus-lg me-1"></i>
+      Ajouter catégorie
+    </a>
+  </div>
+
+  <div class="customers-table-wrap">
+    <% if (!categories || categories.length === 0) { %>
+    <div class="customers-empty">Aucune catégorie trouvée.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0 customers-table dash-recent-table">
+        <thead>
+          <tr>
+            <th style="width: 72px">Image</th>
+            <th>Nom</th>
+            <th>Description</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% categories.forEach(function (cat) { %>
+          <tr>
+            <td>
+              <% if (cat.image_url) { %>
+              <img
+                src="<%= cat.image_url %>"
+                alt=""
+                class="product-thumb"
+                width="44"
+                height="44"
+                loading="lazy"
+                onerror="this.style.visibility='hidden'"
+              />
+              <% } else { %>
+              <div class="product-thumb-placeholder"><i class="bi bi-image text-muted"></i></div>
+              <% } %>
+            </td>
+            <td>
+              <div class="customer-name"><%= cat.name %></div>
+            </td>
+            <td class="text-muted small"><%= cat.description || '—' %></td>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-sm btn-outline-secondary" href="/categories/<%= cat.id %>/edit" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form
+                class="d-inline"
+                method="post"
+                action="/categories/<%= cat.id %>/delete"
+                onsubmit="return confirm('Supprimer cette catégorie ?');"
+              >
+                <button class="btn btn-sm btn-outline-danger" type="submit" title="Supprimer">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>
