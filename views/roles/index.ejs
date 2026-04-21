@@ -1,0 +1,59 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="font-display customers-title mb-1">Rôles</h1>
+      <p class="customers-subtitle mb-0">Définissez les profils d’accès de l’application</p>
+    </div>
+    <a class="btn btn-saveur customers-add-btn" href="/roles/new">
+      <i class="bi bi-plus-lg me-1"></i>
+      Ajouter rôle
+    </a>
+  </div>
+
+  <div class="customers-table-wrap">
+    <% if (!roles || roles.length === 0) { %>
+    <div class="customers-empty">Aucun rôle trouvé.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0 customers-table">
+        <thead>
+          <tr>
+            <th>Nom</th>
+            <th>Description</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% roles.forEach(function (role) { %>
+          <tr>
+            <td>
+              <div class="customer-name"><%= role.name %></div>
+            </td>
+            <td class="text-muted small"><%= role.description || '—' %></td>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-sm btn-outline-secondary" href="/roles/<%= role.id %>/edit" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form
+                class="d-inline"
+                method="post"
+                action="/roles/<%= role.id %>/delete"
+                onsubmit="return confirm('Supprimer ce rôle ?');"
+              >
+                <button class="btn btn-sm btn-outline-danger" type="submit" title="Supprimer">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

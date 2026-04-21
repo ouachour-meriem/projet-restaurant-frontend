@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="fr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Connexion — Saveur</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,600;0,9..144,700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link rel="stylesheet" href="/css/style.css" />
+  </head>
+  <body class="auth-login-body">
+    <div class="auth-login-shell min-vh-100 d-flex flex-column flex-lg-row">
+      <div class="auth-login-brand col-lg-6 d-flex flex-column justify-content-center px-4 px-xl-5 py-5 py-lg-0">
+        <div class="auth-login-brand-inner mx-auto" style="max-width: 420px">
+          <h1 class="font-display auth-login-logo mb-2">Saveur</h1>
+          <p class="auth-login-tagline mb-4">Simplifiez la gestion de votre restaurant</p>
+          <ul class="auth-login-bullets list-unstyled mb-0">
+            <li>Suivez les commandes et le stock en temps réel</li>
+            <li>Gérez la relation client en un seul endroit</li>
+            <li>Analysez les paiements et l’activité</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="auth-login-panel col-lg-6 d-flex align-items-center justify-content-center px-3 py-5 py-lg-0">
+        <div class="auth-login-card w-100" style="max-width: 420px">
+          <h2 class="font-display h3 mb-1">Bon retour</h2>
+          <p class="text-muted small mb-4">Connectez-vous à votre espace Saveur</p>
+
+          <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-danger py-2 small"><%= error %></div>
+          <% } %>
+
+          <form method="post" action="/login" autocomplete="on" novalidate>
+            <input type="hidden" name="redirect" value="<%= typeof redirect !== 'undefined' ? redirect : '/' %>" />
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="email">Adresse e-mail</label>
+              <input
+                class="form-control auth-login-input <%= fieldErrors && fieldErrors.email ? 'is-invalid' : '' %>"
+                id="email"
+                name="email"
+                type="email"
+                placeholder="admin@saveur.com"
+                value="<%= typeof email !== 'undefined' ? email : '' %>"
+              />
+              <% if (fieldErrors && fieldErrors.email) { %>
+              <div class="invalid-feedback d-block"><%= fieldErrors.email %></div>
+              <% } %>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label small fw-semibold" for="password">Mot de passe</label>
+              <input
+                class="form-control auth-login-input <%= fieldErrors && fieldErrors.password ? 'is-invalid' : '' %>"
+                id="password"
+                name="password"
+                type="password"
+                placeholder="••••••••"
+                autocomplete="current-password"
+              />
+              <% if (fieldErrors && fieldErrors.password) { %>
+              <div class="invalid-feedback d-block"><%= fieldErrors.password %></div>
+              <% } %>
+            </div>
+
+            <div class="d-flex justify-content-between align-items-center mb-4 small">
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="remember" value="1" id="remember" />
+                <label class="form-check-label" for="remember">Se souvenir de moi</label>
+              </div>
+              <a href="#" class="auth-login-forgot text-decoration-none" tabindex="-1" onclick="return false;">Mot de passe oublié ?</a>
+            </div>
+
+            <button class="btn btn-saveur w-100 rounded-pill py-2 fw-semibold" type="submit">Se connecter</button>
+          </form>
+
+          <p class="text-muted small mt-4 mb-0 text-center">
+            Démo (selon votre base) : <span class="text-nowrap">admin@saveur.com</span> / mot de passe du compte
+          </p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

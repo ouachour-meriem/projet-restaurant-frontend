@@ -1,0 +1,97 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="font-display customers-title mb-1">Utilisateurs</h1>
+      <p class="customers-subtitle mb-0">Gérez les comptes et les rôles d’accès</p>
+    </div>
+    <a class="btn btn-saveur customers-add-btn" href="/users/new">
+      <i class="bi bi-plus-lg me-1"></i>
+      Ajouter utilisateur
+    </a>
+  </div>
+
+  <div class="customers-table-wrap">
+    <% if (!users || users.length === 0) { %>
+    <div class="customers-empty">Aucun utilisateur trouvé.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0 customers-table">
+        <thead>
+          <tr>
+            <th>Utilisateur</th>
+            <th>E-mail</th>
+            <th>Rôle</th>
+            <th class="text-end">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% users.forEach(function (u) { %>
+          <% const parts = String(u.name || '').trim().split(/\s+/); %>
+          <% let initials = 'U'; if (parts.length >= 2) { initials = (parts[0][0] + parts[1][0]).toUpperCase(); } else if (parts[0]) { initials = parts[0].slice(0, 2).toUpperCase(); } %>
+          <tr>
+            <td>
+              <div class="d-flex align-items-center gap-3">
+                <div class="customer-avatar"><%= initials %></div>
+                <div>
+                  <div class="customer-name"><%= u.name || ('#' + u.id) %></div>
+                </div>
+              </div>
+            </td>
+            <td>
+              <div class="customer-contact-line">
+                <i class="bi bi-envelope"></i>
+                <span><%= u.email || '—' %></span>
+              </div>
+            </td>
+            <td>
+              <span class="badge rounded-pill text-bg-light border">
+                <%= u.role && u.role.name ? u.role.name : ('#' + (u.role_id || '')) %>
+              </span>
+            </td>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-sm btn-outline-secondary" href="/users/<%= u.id %>/edit" title="Modifier">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form
+                class="d-inline"
+                method="post"
+                action="/users/<%= u.id %>/delete"
+                onsubmit="return confirm('Supprimer cet utilisateur ?');"
+              >
+                <button class="btn btn-sm btn-outline-danger" type="submit" title="Supprimer">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+
+  <% if (pagination && pagination.totalPages > 1) { %>
+  <nav class="mt-3" aria-label="Pagination">
+    <ul class="pagination pagination-sm">
+      <% if (pagination.page > 1) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>">Précédent</a>
+      </li>
+      <% } %>
+      <li class="page-item disabled">
+        <span class="page-link"><%= pagination.page %> / <%= pagination.totalPages %></span>
+      </li>
+      <% if (pagination.page < pagination.totalPages) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>">Suivant</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>

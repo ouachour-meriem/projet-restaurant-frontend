@@ -352,3 +352,81 @@
 .orders-modal-close:hover {
   color: #5b4e46;
 }
+
+/* --- Page connexion (auth/login.ejs, maquette Figma) --- */
+.auth-login-body {
+  font-family: "DM Sans", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  color: var(--saveur-text);
+  background: var(--saveur-bg);
+  margin: 0;
+}
+
+.auth-login-shell {
+  background: var(--saveur-bg);
+}
+
+.auth-login-brand {
+  background: linear-gradient(165deg, rgba(250, 247, 242, 1) 0%, rgba(245, 236, 228, 0.95) 100%);
+}
+
+.auth-login-logo {
+  font-size: clamp(2.4rem, 4vw, 3.1rem);
+  color: #231d1a;
+  letter-spacing: 0.02em;
+}
+
+.auth-login-tagline {
+  font-size: 1.05rem;
+  color: var(--saveur-muted);
+}
+
+.auth-login-bullets li {
+  position: relative;
+  padding-left: 1.15rem;
+  margin-bottom: 0.65rem;
+  color: #4a403a;
+  font-size: 0.95rem;
+}
+
+.auth-login-bullets li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.45rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--saveur-primary);
+}
+
+.auth-login-panel {
+  background: var(--saveur-bg);
+}
+
+.auth-login-card {
+  background: #fff;
+  border-radius: 1.15rem;
+  padding: 2rem 1.75rem;
+  border: 1px solid rgba(44, 36, 32, 0.06);
+  box-shadow: 0 18px 50px rgba(36, 29, 26, 0.08);
+}
+
+.auth-login-input {
+  border-radius: 0.65rem;
+  border-color: #e4dcd4;
+  padding: 0.65rem 0.85rem;
+}
+
+.auth-login-input:focus {
+  border-color: rgba(200, 90, 62, 0.45);
+  box-shadow: 0 0 0 0.2rem rgba(200, 90, 62, 0.12);
+}
+
+.auth-login-forgot {
+  color: var(--saveur-primary);
+  font-weight: 500;
+}
+
+.auth-login-forgot:hover {
+  color: #a84a32;
+}
