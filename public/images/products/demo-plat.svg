@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="800" height="600" viewBox="0 0 800 600" role="img" aria-label="D�mo plat">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#faf6f1"/>
+      <stop offset="100%" style="stop-color:#f0e4dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#bg)"/>
+  <ellipse cx="400" cy="320" rx="220" ry="120" fill="#fff" stroke="#e8dcd4" stroke-width="3"/>
+  <circle cx="400" cy="300" r="72" fill="#c85a3e" opacity="0.9"/>
+  <text x="400" y="315" text-anchor="middle" fill="#fff" font-family="Georgia,serif" font-size="28" font-weight="600">Saveur</text>
+</svg>
