@@ -22,6 +22,24 @@ npm run dev
 
 Puis ouvrir **http://localhost:3000** (voir `PORT` dans `.env`).
 
+## Accès démo
+
+Comptes de test utilisés pour la présentation :
+
+- **Compte admin (gestion)**
+  - Rôle : `admin`
+  - E-mail : `meriem.oua@gmail.com`
+  - Mot de passe : `meriem123`
+- **Compte client**
+  - Rôle : `client`
+  - E-mail : `aniss@gmail.com`
+  - Mot de passe : `aniss123`
+
+Pour la présentation, utilisez ces 2 profils afin de montrer :
+
+- l’authentification (connexion / déconnexion),
+- les autorisations (menu et pages selon le rôle admin vs client).
+
 ## Structure actuelle (configuration générale)
 
 - `app.js` — serveur Express, moteur EJS, fichiers statiques `public/`
@@ -36,8 +54,15 @@ Puis ouvrir **http://localhost:3000** (voir `PORT` dans `.env`).
 - **Deux branches minimum par personne** avec commits et fusions sur GitHub
 - Donner accès au dépôt au professeur
 
+## Répartition (générale)
+
+- **Anis** : `users`, `roles`, `auth/login`
+- **Riyadh** : `index` (dashboard), `products`, `categories`
+- **Rayane** : `customers`, `orders`
+- **Meriem** : `order-items`, `payments`, `partials` (`header`, `footer`, `sidebar`)
+
 ## Production
 
 ```bash
-npm start
+npm run dev
 ```

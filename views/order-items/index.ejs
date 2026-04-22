@@ -1,0 +1,136 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1 payments-page order-items-page">
+  <div class="d-flex flex-wrap justify-content-between align-items-center gap-3 mb-4">
+    <div>
+      <h1 class="font-display payments-title mb-1">Order Items</h1>
+      <p class="payments-subtitle mb-0">Track individual items in all orders</p>
+    </div>
+    <a class="btn btn-saveur payments-add-btn" href="/order-items/new"><i class="bi bi-plus-lg me-1"></i> Add Item</a>
+  </div>
+
+  <div class="row g-3 mb-4 payments-kpi-row">
+    <div class="col-md-4">
+      <div class="payments-kpi-card d-flex align-items-center gap-3">
+        <div class="payments-kpi-icon payments-kpi-icon--revenue">
+          <i class="bi bi-bag-heart-fill"></i>
+        </div>
+        <div>
+          <div class="payments-kpi-label">Total Items</div>
+          <div class="payments-kpi-value"><%= stats.totalItems != null ? stats.totalItems : 0 %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="payments-kpi-card d-flex align-items-center gap-3">
+        <div class="payments-kpi-icon payments-kpi-icon--pending">
+          <i class="bi bi-hourglass-split"></i>
+        </div>
+        <div>
+          <div class="payments-kpi-label">Preparing</div>
+          <div class="payments-kpi-value"><%= stats.preparing != null ? stats.preparing : 0 %></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <div class="payments-kpi-card d-flex align-items-center gap-3">
+        <div class="payments-kpi-icon payments-kpi-icon--count">
+          <i class="bi bi-box-seam"></i>
+        </div>
+        <div>
+          <div class="payments-kpi-label">Unique Products</div>
+          <div class="payments-kpi-value"><%= stats.uniqueProducts != null ? stats.uniqueProducts : 0 %></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="payments-table-wrap">
+    <% if (!items || items.length === 0) { %>
+    <div class="payments-empty">No order items found.</div>
+    <% } else { %>
+    <div class="table-responsive">
+      <table class="table align-middle mb-0 payments-table">
+        <thead>
+          <tr>
+            <th>ORDER #</th>
+            <th>PRODUCT</th>
+            <th class="text-center">QTY</th>
+            <th class="text-end">UNIT PRICE</th>
+            <th class="text-end">TOTAL</th>
+            <th>STATUS</th>
+            <th>NOTES</th>
+            <th class="text-end">ACTIONS</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% items.forEach(function (it) { %>
+          <% const oid = it.order_id != null ? it.order_id : (it.order && it.order.id); %>
+          <% const pname = (it.product && it.product.name) || it.product_name || ('#' + (it.product_id != null ? it.product_id : '')); %>
+          <% const qty = Number(it.quantity); %>
+          <% const unit = Number(it.price); %>
+          <% const lineTotal = Number.isFinite(qty) && Number.isFinite(unit) ? qty * unit : NaN; %>
+          <% const notes = it.notes || it.note || '—'; %>
+          <tr>
+            <td><span class="payments-order-ref">#ORD-<%= oid != null ? oid : '—' %></span></td>
+            <td class="payments-customer-name"><%= pname %></td>
+            <td class="text-center"><span class="order-items-qty"><%= it.quantity != null ? it.quantity : '—' %></span></td>
+            <td class="text-end payments-amount">
+              <%= Number.isFinite(unit) ? unit.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '—' %>
+            </td>
+            <td class="text-end payments-amount">
+              <%= Number.isFinite(lineTotal) ? lineTotal.toLocaleString('en-US', { style: 'currency', currency: 'USD' }) : '—' %>
+            </td>
+            <td>
+              <% if (it.status) { %>
+              <%- include('../partials/statusBadge', { status: it.status }) %>
+              <% } else { %>
+              <span class="text-muted">—</span>
+              <% } %>
+            </td>
+            <td class="text-muted small"><%= notes %></td>
+            <td class="text-end text-nowrap">
+              <a class="btn btn-sm btn-outline-secondary payments-action-btn" href="/order-items/<%= it.id %>/edit" title="Edit">
+                <i class="bi bi-pencil"></i>
+              </a>
+              <form
+                class="d-inline"
+                method="post"
+                action="/order-items/<%= it.id %>/delete"
+                onsubmit="return confirm('Delete this line?');"
+              >
+                <button class="btn btn-sm btn-outline-danger payments-action-btn" type="submit" title="Delete">
+                  <i class="bi bi-trash3"></i>
+                </button>
+              </form>
+            </td>
+          </tr>
+          <% }); %>
+        </tbody>
+      </table>
+    </div>
+    <% } %>
+  </div>
+
+  <% if (pagination && pagination.totalPages > 1) { %>
+  <nav class="mt-3" aria-label="Pagination">
+    <ul class="pagination pagination-sm">
+      <% if (pagination.page > 1) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= pagination.page - 1 %>&limit=<%= pagination.limit %>">Previous</a>
+      </li>
+      <% } %>
+      <li class="page-item disabled">
+        <span class="page-link"><%= pagination.page %> / <%= pagination.totalPages %></span>
+      </li>
+      <% if (pagination.page < pagination.totalPages) { %>
+      <li class="page-item">
+        <a class="page-link" href="?page=<%= pagination.page + 1 %>&limit=<%= pagination.limit %>">Next</a>
+      </li>
+      <% } %>
+    </ul>
+  </nav>
+  <% } %>
+</main>
+
+<%- include('../partials/footer') %>
