@@ -1,0 +1,110 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1 payments-page order-items-page">
+  <div class="payments-form-shell">
+    <div class="payments-form-card">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 class="font-display payments-form-title mb-1">Edit order item</h1>
+          <p class="payments-subtitle mb-0">Update quantity and unit price</p>
+        </div>
+        <a href="/order-items" class="payments-form-close" aria-label="Close">&times;</a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+      <% if (typeof loadWarning !== 'undefined' && loadWarning) { %>
+      <div class="alert alert-warning py-2"><%= loadWarning %></div>
+      <% } %>
+
+      <% const b = body && Object.keys(body).length ? body : {}; %>
+      <% const iid = item && item.id; %>
+      <% const selOrder = b.order_id != null && String(b.order_id) !== '' ? b.order_id : (item && item.order_id); %>
+      <% const selProduct = b.product_id != null && String(b.product_id) !== '' ? b.product_id : (item && item.product_id); %>
+      <% const selQty = b.quantity != null && String(b.quantity) !== '' ? b.quantity : (item && item.quantity); %>
+      <% const selPrice = b.price != null && String(b.price) !== '' ? b.price : (item && item.price); %>
+
+      <form method="post" action="/order-items/<%= iid %>/update" novalidate>
+        <div class="mb-3">
+          <label class="form-label" for="order_id">Order <span class="text-danger">*</span></label>
+          <select
+            class="form-select <%= fieldErrors.order_id ? 'is-invalid' : '' %>"
+            id="order_id"
+            name="order_id"
+            required
+          >
+            <option value="">Select an order…</option>
+            <% (orders || []).forEach(function (o) { %>
+            <option value="<%= o.id %>" <%= String(selOrder) === String(o.id) ? 'selected' : '' %>>
+              #ORD-<%= o.id %><% if (o.customer) { %> — <%= o.customer.first_name %> <%= o.customer.last_name %><% } %>
+            </option>
+            <% }); %>
+          </select>
+          <% if (fieldErrors.order_id) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.order_id %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="product_id">Product <span class="text-danger">*</span></label>
+          <select
+            class="form-select <%= fieldErrors.product_id ? 'is-invalid' : '' %>"
+            id="product_id"
+            name="product_id"
+            required
+          >
+            <option value="">Select a product…</option>
+            <% (products || []).forEach(function (p) { %>
+            <option value="<%= p.id %>" <%= String(selProduct) === String(p.id) ? 'selected' : '' %>>
+              <%= p.name || ('#' + p.id) %>
+            </option>
+            <% }); %>
+          </select>
+          <% if (fieldErrors.product_id) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.product_id %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="quantity">Quantity <span class="text-danger">*</span></label>
+          <input
+            class="form-control <%= fieldErrors.quantity ? 'is-invalid' : '' %>"
+            id="quantity"
+            name="quantity"
+            type="number"
+            min="1"
+            step="1"
+            inputmode="numeric"
+            value="<%= selQty != null ? selQty : '' %>"
+          />
+          <% if (fieldErrors.quantity) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.quantity %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label" for="price">Unit price (USD) <span class="text-danger">*</span></label>
+          <input
+            class="form-control <%= fieldErrors.price ? 'is-invalid' : '' %>"
+            id="price"
+            name="price"
+            type="text"
+            inputmode="decimal"
+            value="<%= selPrice != null ? selPrice : '' %>"
+          />
+          <% if (fieldErrors.price) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.price %></div>
+          <% } %>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-saveur px-4" type="submit">Update</button>
+          <a class="btn btn-outline-secondary" href="/order-items">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

@@ -4,6 +4,7 @@ const express = require("express");
 const session = require("express-session");
 
 const requireAuth = require("./middleware/requireAuth");
+const { requireRole, isAdmin } = require("./middleware/requireRole");
 const { apiClient } = require("./lib/api");
 const authRoutes = require("./routes/auth");
 const customersRoutes = require("./routes/customers");
@@ -12,6 +13,8 @@ const usersRoutes = require("./routes/users");
 const rolesRoutes = require("./routes/roles");
 const categoriesRoutes = require("./routes/categories");
 const productsRoutes = require("./routes/products");
+const paymentsRoutes = require("./routes/payments");
+const orderItemsRoutes = require("./routes/orderItems");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -38,6 +41,7 @@ app.use((req, res, next) => {
   res.locals.currentPath = req.path || "";
   res.locals.isLoggedIn = !!(req.session && req.session.token);
   res.locals.currentUser = req.session && req.session.user ? req.session.user : null;
+  res.locals.isAdmin = isAdmin(res.locals.currentUser);
   if (req.session && req.session.flash) {
     res.locals.flash = req.session.flash;
     delete req.session.flash;
@@ -122,12 +126,14 @@ app.get("/", async (req, res) => {
 
 app.use("/", authRoutes);
 
-app.use("/customers", requireAuth, customersRoutes);
+app.use("/customers", requireRole(["admin"]), customersRoutes);
 app.use("/orders", requireAuth, ordersRoutes);
-app.use("/users", requireAuth, usersRoutes);
-app.use("/roles", requireAuth, rolesRoutes);
+app.use("/users", requireRole(["admin"]), usersRoutes);
+app.use("/roles", requireRole(["admin"]), rolesRoutes);
 app.use("/categories", requireAuth, categoriesRoutes);
 app.use("/products", requireAuth, productsRoutes);
+app.use("/payments", requireRole(["admin"]), paymentsRoutes);
+app.use("/order-items", requireRole(["admin"]), orderItemsRoutes);
 
 app.listen(PORT, () => {
   console.log(`Frontend EJS : http://localhost:${PORT}`);

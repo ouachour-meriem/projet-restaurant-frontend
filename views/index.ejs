@@ -2,7 +2,10 @@
 
 <% if (typeof isLoggedIn !== "undefined" && isLoggedIn) { %>
 <% const dash = typeof dashboard !== "undefined" && dashboard ? dashboard : {}; %>
-<% const fmtMoney = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString("fr-FR", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + " €" : "—"); %>
+<% const fmtMoney = (v) =>
+  v != null && Number.isFinite(Number(v))
+    ? Number(v).toLocaleString("en-US", { style: "currency", currency: "USD" })
+    : "—"; %>
 <% const fmtInt = (v) => (v != null && Number.isFinite(Number(v)) ? Number(v).toLocaleString("fr-FR") : "—"); %>
 <% const relTime = (iso) => {
   if (!iso) return "—";
@@ -110,7 +113,7 @@
             <td class="customer-metric">#<%= o.id %></td>
             <td><span class="customer-name"><%= cust || "—" %></span></td>
             <td class="text-end customer-metric">
-              <% if (o.total_amount != null) { %> <%= Number(o.total_amount).toFixed(2) %> € <% } else { %>—<% } %>
+              <% if (o.total_amount != null) { %><%= fmtMoney(o.total_amount) %><% } else { %>—<% } %>
             </td>
             <td><%- include('partials/statusBadge', { status: o.status || "—" }) %></td>
             <td class="text-end text-muted small"><%= relTime(o.order_date) %></td>

@@ -58,7 +58,7 @@
             </td>
             <td class="text-end customer-metric">
               <% if (p.price != null && Number.isFinite(Number(p.price))) { %>
-              <%= Number(p.price).toFixed(2) %> €
+              <%= Number(p.price).toLocaleString("en-US", { style: "currency", currency: "USD" }) %>
               <% } else { %>
               —
               <% } %>

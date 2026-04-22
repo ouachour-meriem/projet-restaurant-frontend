@@ -96,7 +96,7 @@
             <% } %>
           </td>
           <td>
-            <% if (o.total_amount != null) { %> <%= Number(o.total_amount).toFixed(2) %> € <% } %>
+            <% if (o.total_amount != null) { %><%= Number(o.total_amount).toLocaleString("en-US", { style: "currency", currency: "USD" }) %><% } %>
           </td>
           <td><%- include('../partials/statusBadge', { status: o.status }) %></td>
           <td class="text-end text-nowrap">

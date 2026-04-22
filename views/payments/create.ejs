@@ -1,0 +1,115 @@
+<%- include('../partials/header', { title: title }) %>
+
+<main class="container-fluid px-0 flex-grow-1 payments-page">
+  <div class="payments-form-shell">
+    <div class="payments-form-card">
+      <div class="d-flex justify-content-between align-items-start mb-4">
+        <div>
+          <h1 class="font-display payments-form-title mb-1">New Payment</h1>
+          <p class="payments-subtitle mb-0">Record a transaction linked to an order</p>
+        </div>
+        <a href="/payments" class="payments-form-close" aria-label="Close">&times;</a>
+      </div>
+
+      <% if (typeof error !== 'undefined' && error) { %>
+      <div class="alert alert-danger"><%= error %></div>
+      <% } %>
+      <% if (typeof loadWarning !== 'undefined' && loadWarning) { %>
+      <div class="alert alert-warning py-2"><%= loadWarning %></div>
+      <% } %>
+
+      <form method="post" action="/payments" novalidate>
+        <div class="mb-3">
+          <label class="form-label" for="order_id">Order <span class="text-danger">*</span></label>
+          <select
+            class="form-select <%= fieldErrors.order_id ? 'is-invalid' : '' %>"
+            id="order_id"
+            name="order_id"
+            required
+          >
+            <option value="">Select an order…</option>
+            <% (orders || []).forEach(function (o) { %>
+            <option value="<%= o.id %>" <%= String(body.order_id || '') === String(o.id) ? 'selected' : '' %>>
+              #ORD-<%= o.id %><% if (o.customer) { %> — <%= o.customer.first_name %> <%= o.customer.last_name %><% } %>
+            </option>
+            <% }); %>
+          </select>
+          <% if (fieldErrors.order_id) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.order_id %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="amount">Amount (USD) <span class="text-danger">*</span></label>
+          <input
+            class="form-control <%= fieldErrors.amount ? 'is-invalid' : '' %>"
+            id="amount"
+            name="amount"
+            type="text"
+            inputmode="decimal"
+            placeholder="89.50"
+            value="<%= body.amount != null ? body.amount : '' %>"
+          />
+          <% if (fieldErrors.amount) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.amount %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="payment_method">Payment method <span class="text-danger">*</span></label>
+          <select
+            class="form-select <%= fieldErrors.payment_method ? 'is-invalid' : '' %>"
+            id="payment_method"
+            name="payment_method"
+            required
+          >
+            <% const pm = body.payment_method || ''; %>
+            <option value="">Select…</option>
+            <option value="Credit Card" <%= pm === 'Credit Card' ? 'selected' : '' %>>Credit Card</option>
+            <option value="Debit Card" <%= pm === 'Debit Card' ? 'selected' : '' %>>Debit Card</option>
+            <option value="Cash" <%= pm === 'Cash' ? 'selected' : '' %>>Cash</option>
+            <option value="Digital Wallet" <%= pm === 'Digital Wallet' ? 'selected' : '' %>>Digital Wallet</option>
+          </select>
+          <% if (fieldErrors.payment_method) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.payment_method %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label" for="status">Status <span class="text-danger">*</span></label>
+          <select class="form-select <%= fieldErrors.status ? 'is-invalid' : '' %>" id="status" name="status" required>
+            <% const st = body.status || 'Pending'; %>
+            <option value="Pending" <%= st === 'Pending' ? 'selected' : '' %>>Pending</option>
+            <option value="Completed" <%= st === 'Completed' ? 'selected' : '' %>>Completed</option>
+            <option value="Failed" <%= st === 'Failed' ? 'selected' : '' %>>Failed</option>
+          </select>
+          <% if (fieldErrors.status) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.status %></div>
+          <% } %>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label" for="payment_date">Date &amp; time <span class="text-danger">*</span></label>
+          <input
+            class="form-control <%= fieldErrors.payment_date ? 'is-invalid' : '' %>"
+            id="payment_date"
+            name="payment_date"
+            type="datetime-local"
+            value="<%= body.payment_date || '' %>"
+            required
+          />
+          <% if (fieldErrors.payment_date) { %>
+          <div class="invalid-feedback d-block"><%= fieldErrors.payment_date %></div>
+          <% } %>
+        </div>
+
+        <div class="d-flex gap-2">
+          <button class="btn btn-saveur px-4" type="submit">Save payment</button>
+          <a class="btn btn-outline-secondary" href="/payments">Cancel</a>
+        </div>
+      </form>
+    </div>
+  </div>
+</main>
+
+<%- include('../partials/footer') %>

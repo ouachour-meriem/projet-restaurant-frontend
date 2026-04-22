@@ -21,47 +21,11 @@
     <link rel="stylesheet" href="/css/style.css" />
   </head>
   <body class="app-body d-flex flex-column min-vh-100">
-    <% const path = typeof currentPath !== "undefined" ? currentPath : ""; %>
-    <% const navActive = (p) => (p === "/" ? path === "/" || path === "" : path === p || path.startsWith(p + "/")); %>
-    <% const dashActive = path === "/" || path === ""; %>
     <% if (typeof isLoggedIn !== "undefined" && isLoggedIn) { %>
     <% let initials = "U"; if (typeof currentUser !== "undefined" && currentUser && currentUser.name) { const parts =
     String(currentUser.name).trim().split(/\s+/); if (parts.length >= 2) { initials = (parts[0][0] + parts[1][0]).toUpperCase(); } else { initials = parts[0].slice(0, 2).toUpperCase(); } } %>
     <div class="app-shell d-flex flex-grow-1 min-vh-100">
-      <aside class="app-sidebar d-flex flex-column">
-        <div class="sidebar-brand px-3 pt-4 pb-3">
-          <div class="sidebar-logo font-display">Saveur</div>
-          <div class="sidebar-sub">Gestion restaurant</div>
-        </div>
-        <nav class="sidebar-nav flex-grow-1 px-2 pb-3">
-          <a href="/" class="sidebar-link <%= dashActive ? 'active' : '' %>">
-            <i class="bi bi-grid-1x2-fill"></i><span>Tableau de bord</span>
-          </a>
-          <a href="/products" class="sidebar-link <%= navActive('/products') ? 'active' : '' %>">
-            <i class="bi bi-box-seam"></i><span>Produits</span>
-          </a>
-          <a href="/categories" class="sidebar-link <%= navActive('/categories') ? 'active' : '' %>">
-            <i class="bi bi-tags"></i><span>Catégories</span>
-          </a>
-          <a href="/customers" class="sidebar-link <%= navActive('/customers') ? 'active' : '' %>">
-            <i class="bi bi-people"></i><span>Clients</span>
-          </a>
-          <a href="/users" class="sidebar-link <%= navActive('/users') ? 'active' : '' %>">
-            <i class="bi bi-person-badge"></i><span>Utilisateurs</span>
-          </a>
-          <a href="/roles" class="sidebar-link <%= navActive('/roles') ? 'active' : '' %>">
-            <i class="bi bi-shield-lock"></i><span>Rôles</span>
-          </a>
-          <a href="/orders" class="sidebar-link <%= navActive('/orders') ? 'active' : '' %>">
-            <i class="bi bi-bag-check"></i><span>Commandes</span>
-          </a>
-          <span class="sidebar-link sidebar-link-disabled"><i class="bi bi-list-task"></i><span>Lignes de commande</span></span>
-          <span class="sidebar-link sidebar-link-disabled"><i class="bi bi-credit-card"></i><span>Paiements</span></span>
-        </nav>
-        <div class="sidebar-footer px-3 pb-4">
-          <a href="/logout" class="sidebar-link sidebar-link-logout"><i class="bi bi-box-arrow-right"></i><span>Déconnexion</span></a>
-        </div>
-      </aside>
+      <%- include('./sidebar') %>
       <div class="app-main flex-grow-1 d-flex flex-column min-vh-100">
         <header class="app-topbar d-flex justify-content-end align-items-center px-4 py-3">
           <div class="d-flex align-items-center gap-3">
