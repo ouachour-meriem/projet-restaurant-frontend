@@ -2,6 +2,12 @@
 
 Projet séparé du **backend** (autre dépôt GitHub), conformément au sujet : interface utilisateur avec **Express** et **EJS**.
 
+**Backend API (repo):** [https://github.com/ouachour-meriem/projet-restaurant.git](https://github.com/ouachour-meriem/projet-restaurant.git)
+
+```bash
+git clone https://github.com/ouachour-meriem/projet-restaurant.git
+```
+
 ## Prérequis
 
 - Node.js **18+** (pour `node --watch` en dev)
